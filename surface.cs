@@ -18,7 +18,7 @@ namespace Template
 			width = w;
 			height = h;
 			pixels = new int[w * h];
-        }
+		}
 		// surface constructor using a file
 		public Surface( string fileName )
 		{
@@ -186,17 +186,17 @@ namespace Template
 				}
 				fontReady = true;
 			}
-            for (int i = 0; i < t.Length; i++)
-            {
-                int f = fontRedir[(int)t[i] & 255];
-                int dest = x + i * 12 + y * width;
-                int src = f * 12;
-                for (int v = 0; v < font.height; v++, src += font.width, dest += width) for (int u = 0; u < 12; u++)
-                {
-                    if ((font.pixels[src + u] & 0xffffff) != 0) pixels[dest + u] = c;
-                }
-            }
-        }
+			for( int i = 0; i < t.Length; i++ )
+			{
+				int f = fontRedir[(int)t[i] & 255];
+				int dest = x + i * 12 + y * width;
+				int src = f * 12;
+				for( int v = 0; v < font.height; v++, src += font.width, dest += width ) for( int u = 0; u < 12; u++ )
+					{
+						if( (font.pixels[src + u] & 0xffffff) != 0 ) pixels[dest + u] = c;
+					}
+			}
+		}
 	}
 	public class Sprite
 	{

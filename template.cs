@@ -32,8 +32,7 @@ namespace Template
 			GL.ClearColor( 0, 0, 0, 0 );
 			GL.Enable( EnableCap.Texture2D );
 			GL.Disable( EnableCap.DepthTest );
-            GL.Color3(1.0f, 1.0f, 1.0f);
-            GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
+			GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
 			ClientSize = new Size( 640, 400 );
 			app = new MyApplication();
 			app.screen = new Surface( Width, Height );
@@ -84,19 +83,8 @@ namespace Template
 			GL.TexCoord2( 1.0f, 0.0f ); GL.Vertex2( 1.0f, 1.0f );
 			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex2( -1.0f, 1.0f );
 			GL.End();
-            
-            // prepare for generic OpenGL rendering (i.e. delete some -not all- stuff from Tick() in MyApplication.cs)
-            GL.Enable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.Texture2D);
-            GL.Clear(ClearBufferMask.DepthBufferBit);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            GL.PushMatrix();
-            app.RenderGL();
-            GL.PopMatrix();
-
-            // tell OpenTK we're done rendering
-            SwapBuffers();
+			// tell OpenTK we're done rendering
+			SwapBuffers();
 		}
 		public static void Main( string[] args )
 		{
