@@ -85,6 +85,16 @@ namespace Template
 			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex2( -1.0f, 1.0f );
 			GL.End();
 
+            // prepare for generic OpenGL rendering (i.e. delete some -not all- stuff from Tick() in MyApplication.cs)
+            GL.Enable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Clear(ClearBufferMask.DepthBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            GL.PushMatrix();
+            app.RenderGL();
+            GL.PopMatrix();
+
             // tell OpenTK we're done rendering
             SwapBuffers();
 		}

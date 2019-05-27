@@ -101,11 +101,10 @@ namespace Template
 		public void Bar( int x1, int y1, int x2, int y2, int c )
 		{
 			int dest = y1 * width;
-			for( int y = y1; y <= y2; y++, dest += width ) for( int x = x1; x <= x2; x++ )
-				{
-					pixels[dest + x] = c;
-				}
-		}
+			for( int y = y1; y <= y2; y++, dest += width )
+                for ( int x = x1; x <= x2; x++ )
+                { pixels[dest + x] = c; }
+        }
 		// helper function for line clipping
 		int OUTCODE( int x, int y )
 		{
