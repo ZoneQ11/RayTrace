@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace Template
 {
@@ -19,14 +18,12 @@ namespace Template
         public Vector2 light_pos;
         public int MixColor(int red, int green, int blue) { return (red << 16) + (green << 8) + blue; }
         public int color;
+        public float brightness;
         public Light(int a, int b, int c)
         { color = MixColor(a, b, c); }
 
-        public float lightAttentuation(float distance)
-        {
-            if (distance > 1) return 1 / distance;
-            else return 1;
-        }
+        public float attentuation(float distance)
+        { return brightness / (distance + 1 * distance + 1); }
     }
 
     abstract class Primitive
@@ -40,11 +37,11 @@ namespace Template
         public Vector2 C; //Center
         public float r; //Radius
 
-        public Circle()
+        /*public Circle()
         {
             Light l = new Light(255, 255, 255);
             l.light_pos = C;
-        }
+        }*/
 
         public override bool Intersect(Ray ray)
         {
@@ -84,36 +81,29 @@ namespace Template
         List<Light> light_array = new List<Light>();
         List<Primitive> primitives = new List<Primitive>();
 
-        public int TX(float x)
-        { return (int)((x + 2) * screen.width / 4); }
+        float f(float a1, float a2, float b1, float b2, float s)
+        { return b1 + (s - a1) * (b2 - b1) / (a2 - a1); }
 
-        public int TY(float y)
-        { y *= -1; return (int)((y + 2) * screen.height / 4); }
+        public int TX(float x) { return (int)((x + 2) * screen.width / 4); }
+        public int TY(float y) { y *= -1; return (int)((y + 2) * screen.height / 4); }
 
         // member variables
         public Surface screen;
 		// initialize
 		public void Init()
 		{
-            ray.O = new Vector2(TX(0),TY(0));
-            ray.t = 1;
-            ray.D = new Vector2(TX(1), TY(1));
-            ray.D = Vector2.Normalize(ray.D);
-
-            circle.C = new Vector2(TX(-1), TY(1));
+            circle.C = new Vector2(-1,1);
             circle.r = 1;
 
-            line.B = new Vector2(TX(1), TY(0));
-            line.E = new Vector2(TX(0), TY(1));
+            line.B = new Vector2(1,0);
+            line.E = new Vector2(0,1);
 
-            light.light_pos = new Vector2(TX(1), TY(1));
+            light.light_pos = new Vector2(1,1);
+            light.brightness = 1.0f;
 
             primitives.Add(circle);
             primitives.Add(line);
             light_array.Add(light);
-
-            Debug.WriteLine("Circle: " + circle.Intersect(ray));
-            Debug.WriteLine("Line: " + line.Intersect(ray));
         }
 
         // Tick: renders one frame
@@ -125,20 +115,27 @@ namespace Template
             for (int x = 0; x < screen.width - 1; x++)
                 for (int y = 0; y < screen.height - 1; y++)
                 {
+                    float rx = f(0, screen.width - 1, -1, 1, x);
+                    float ry = f(0, screen.height - 1, -1, 1, y);
+
                     pixelColor = 0;
                     foreach (Light l in light_array)
                     {
-                        float a = l.light_pos.X - ray.O.X, b = l.light_pos.Y - ray.O.Y,
-                            distanceToLight = (float)Math.Sqrt(a * a + b * b);                        
-                        ray.O = new Vector2(x, y * screen.width);
+                        ray.O = new Vector2(rx, ry);
+                        float distanceToLight = l.light_pos.Length - ray.O.Length;
                         ray.D = l.light_pos - ray.O;
                         ray.D = Vector2.Normalize(ray.D);
                         ray.t = distanceToLight;
-                        bool occluded = false;
-                        foreach (Primitive p in primitives)
-                            if (p.Intersect(ray)) occluded = true;
-                        if(!occluded)
-                            pixelColor += light.MixColor(255, 255, 255) * (int)light.lightAttentuation(distanceToLight);
+                        //bool occluded = false;
+                        //foreach (Primitive p in primitives)
+                        //if (p.Intersect(ray)) occluded = true;
+                        //if (!occluded)
+                        pixelColor += light.MixColor(255, 255, 255) * (int)light.attentuation(distanceToLight);
+                        //Debug.WriteLine("l.light_pos.X: " + l.light_pos.X);
+                        //Debug.WriteLine("l.light_pos.Y: " + l.light_pos.Y);
+                        //Debug.WriteLine("ray.O.X: " + ray.O.X);
+                        //Debug.WriteLine("ray.O.Y: " + ray.O.Y);
+                        //Debug.WriteLine("distanceToLight: " + distanceToLight);
                     }
                     screen.Plot(x, y, pixelColor);
                 }
