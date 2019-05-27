@@ -130,14 +130,10 @@ namespace Template
                         //foreach (Primitive p in primitives)
                         //if (p.Intersect(ray)) occluded = true;
                         //if (!occluded)
-                        pixelColor += light.MixColor(255, 255, 255) * (int)light.attentuation(distanceToLight);
-                        //Debug.WriteLine("l.light_pos.X: " + l.light_pos.X);
-                        //Debug.WriteLine("l.light_pos.Y: " + l.light_pos.Y);
-                        //Debug.WriteLine("ray.O.X: " + ray.O.X);
-                        //Debug.WriteLine("ray.O.Y: " + ray.O.Y);
-                        //Debug.WriteLine("distanceToLight: " + distanceToLight);
+                        pixelColor += (int)(light.MixColor(255, 255, 255) * light.attentuation(distanceToLight));
+                        //Debug.WriteLine("pixelColor: " + pixelColor);
                     }
-                    screen.Plot(x, y, pixelColor);
+                    screen.Plot(x, y, light.MixColor(0, 0, pixelColor));
                 }
         }
     }
