@@ -14,12 +14,12 @@ namespace Template
 
         Ray ray = new Ray();
         Line line = new Line();
-        Circle circle = new Circle();
+        Circle circle = new Circle(0.8f);
         Light light = new Light(255, 255, 255);
         List<Light> light_array = new List<Light>();
         List<Primitive> primitives = new List<Primitive>();
 
-        static float i = 0.0f;
+        static float i = 1.0f;
 
         int pixelColor;
         float f(float a1, float a2, float b1, float b2, float s)
@@ -30,17 +30,16 @@ namespace Template
         // initialize
         public void Init()
         {
-            //circle.C = new Vector2(-1.0f, 0);
-            //circle.r = 0.3f;           
+            circle.C = new Vector2(-0.5f, 0);
+            circle.r = 0.1f;           
 
-            line.B = new Vector2(0, -0.5f);
-            line.E = new Vector2(0.5f, 0);
-
-            light.light_pos = new Vector2(0f, 0f);
+            line.B = new Vector2(0.5f, 0.5f);
+            line.E = new Vector2(0.0f, 0.0f);
+            
             light.brightness = 0.8f;
 
-            //primitives.Add(circle);
-            //primitives.Add(line);
+            primitives.Add(circle);
+            primitives.Add(line);
             light_array.Add(light);
             light_array.Add(circle.cl);
         }
@@ -48,7 +47,8 @@ namespace Template
         // Tick: renders one frame
         public void Tick()
         {
-            if (i < 1.0f) i += 0.01f; else i = 0.0f;
+            if (i > -1.0f) i -= 0.02f; else i = 1.0f;
+            light.light_pos = new Vector2(0f, i);
         }
 
         public void RenderGL()
@@ -70,9 +70,9 @@ namespace Template
                         ray.D = Vector2.Normalize(ray.D);
                         ray.t = distanceToLight;
 
-                        float red_float = 1.0f * light.attentuation(distanceToLight),
-                            green_float = 1.0f * light.attentuation(distanceToLight),
-                            blue_float = 1.0f * light.attentuation(distanceToLight);
+                        float red_float = 1.0f * l.attentuation(distanceToLight),
+                            green_float = 1.0f * l.attentuation(distanceToLight),
+                            blue_float = 1.0f * l.attentuation(distanceToLight);
                         int red_int = (int)f(0.0f, 1.0f, 0, 255, red_float),
                             green_int = (int)f(0.0f, 1.0f, 0, 255, green_float),
                             blue_int = (int)f(0.0f, 1.0f, 0, 255, blue_float);
@@ -81,10 +81,10 @@ namespace Template
                         foreach (Primitive p in primitives)
                             if (p.Intersect(ray)) occluded = true;
                         if (!occluded)
-                            pixelColor += light.MixColor(red_int, green_int, blue_int);
+                            pixelColor += l.MixColor(red_int, green_int, blue_int);
 
                     }
-                    screen.Plot(x, y, pixelColor);
+                    screen.Plot(x, y, MathHelper.Clamp(pixelColor, 0, light.MixColor(255, 255, 255)));
                 }
         }
     }

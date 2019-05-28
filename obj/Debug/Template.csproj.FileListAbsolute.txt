@@ -9,3 +9,14 @@ C:\Users\Zone Q11\Documents\GitHub\P1\obj\Debug\Template.csproj.CoreCompileInput
 C:\Users\Zone Q11\Documents\GitHub\P1\obj\Debug\Template.csproj.CopyComplete
 C:\Users\Zone Q11\Documents\GitHub\P1\obj\Debug\INFOGR2019Tmpl8.exe
 C:\Users\Zone Q11\Documents\GitHub\P1\obj\Debug\INFOGR2019Tmpl8.pdb
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\INFOGR2019Tmpl8.exe.config
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\INFOGR2019Tmpl8.exe
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\INFOGR2019Tmpl8.pdb
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\OpenTK.dll
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\OpenTK.pdb
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\bin\Debug\OpenTK.xml
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\obj\Debug\Template.csprojAssemblyReference.cache
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\obj\Debug\Template.csproj.CoreCompileInputs.cache
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\obj\Debug\Template.csproj.CopyComplete
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\obj\Debug\INFOGR2019Tmpl8.exe
+C:\Users\Zone Q11\Documents\GitHub\RayTrace\obj\Debug\INFOGR2019Tmpl8.pdb
