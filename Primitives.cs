@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using OpenTK;
 
 namespace Template
@@ -13,11 +12,13 @@ namespace Template
     class Light
     {
         public Vector2 light_pos;
-        public float brightness;
+        public float brightness, R, G, B;
+        public Light(float R, float G, float B)
+        { this.R = R; this.G = G; this.B = B; }
 
         public float attentuation(float distance)
         {
-            if (brightness > 1) brightness = 1;
+            if (brightness > 0.9) brightness = 0.9f;
             return brightness * brightness / (distance + 1 * distance + 1);
         }
     }
@@ -33,11 +34,11 @@ namespace Template
         public Vector2 C; //Center
         public float r; //Radius
 
-        public Light cl = new Light();
-        public Circle(float brightness)
+        public Light cl = new Light(1.0f, 1.0f, 1.0f);
+        public Circle(float brightness, float R, float G, float B)
         {
-            cl.light_pos = new Vector2(0f, 0f);
             cl.brightness = brightness;
+            cl.R = R; cl.G = G; cl.B = B;
         }
 
         public override bool Intersect(Ray ray)

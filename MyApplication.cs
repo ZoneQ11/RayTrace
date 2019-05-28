@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using OpenTK;
 
 namespace Template
@@ -11,11 +9,16 @@ namespace Template
         // member variables
         public Surface screen;
         private Ray ray = new Ray();
-        private Line line = new Line();
-        private Circle circle = new Circle(0.8f);
-        private Light light = new Light();
         private List<Light> light_array = new List<Light>();
         private List<Primitive> primitives = new List<Primitive>();
+
+        private Line line1 = new Line(); private Line line2 = new Line();
+        private Line line3 = new Line(); private Line line4 = new Line();
+
+        private Circle circle = new Circle(1.4f, 1.0f, 0.0f, 0.0f);
+
+        private Light light1 = new Light(1.0f, 1.0f, 1.0f); private Light light2 = new Light(1.0f, 0.0f, 0.0f);
+        private Light light3 = new Light(0.0f, 1.0f, 0.0f); private Light light4 = new Light(0.0f, 0.0f, 1.0f);
 
         private int pixelColor;
         private int MixColor(int red, int green, int blue) { return (red << 16) + (green << 8) + blue; }
@@ -25,20 +28,31 @@ namespace Template
         // initialize
         public void Init()
         {
+            //The range of the coordinates is within -1.0f and 1.0f
+            //The Y-coordinate is still inverted
+
             circle.C = new Vector2(0, 0);
             circle.cl.light_pos = circle.C;
             circle.r = 0.1f;           
 
-            line.B = new Vector2(0.5f, 0f);
-            line.E = new Vector2(0f, -0.5f);
+            line1.B = new Vector2(0.25f, 0.15f); line1.E = new Vector2(0.25f, -0.15f);
+            line2.B = new Vector2(0.15f, 0.25f); line2.E = new Vector2(-0.15f, 0.25f);
+            line3.B = new Vector2(-0.25f, 0.15f); line3.E = new Vector2(-0.25f, -0.15f);
+            line4.B = new Vector2(0.15f, -0.25f); line4.E = new Vector2(-0.15f, -0.25f);
 
-            light.light_pos = new Vector2(1.0f, 0f);
-            light.brightness = 1.41f;
+            light1.light_pos = new Vector2(-1.0f, 1.0f);    light1.brightness = 1.0f;
+            light2.light_pos = new Vector2(1.0f, 1.0f);     light2.brightness = 1.0f;
+            light3.light_pos = new Vector2(1.0f, -1.0f);    light3.brightness = 1.0f;
+            light4.light_pos = new Vector2(-1.0f, -1.0f);   light4.brightness = 1.0f;
 
-            primitives.Add(line);
+            primitives.Add(line1);      primitives.Add(line2);
+            primitives.Add(line3);      primitives.Add(line4);
+
             primitives.Add(circle);
-            light_array.Add(light);
             light_array.Add(circle.cl);
+
+            light_array.Add(light1);    light_array.Add(light2);
+            light_array.Add(light3);    light_array.Add(light4);
         }
 
         // Tick: renders one frame
@@ -64,9 +78,9 @@ namespace Template
                         ray.D = Vector2.Normalize(l.light_pos - ray.O);
                         ray.t = distanceToLight;
 
-                        float red_float = 1.0f * l.attentuation(distanceToLight),
-                            green_float = 1.0f * l.attentuation(distanceToLight),
-                            blue_float = 1.0f * l.attentuation(distanceToLight);
+                        float red_float = l.R * l.attentuation(distanceToLight),
+                            green_float = l.G * l.attentuation(distanceToLight),
+                            blue_float = l.B * l.attentuation(distanceToLight);
                         int red_int = (int)f(0.0f, 1.0f, 0, 255, red_float),
                             green_int = (int)f(0.0f, 1.0f, 0, 255, green_float),
                             blue_int = (int)f(0.0f, 1.0f, 0, 255, blue_float);
