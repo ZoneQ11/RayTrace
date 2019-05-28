@@ -33,13 +33,13 @@ namespace Template
             circle.C = new Vector2(-0.5f, 0);
             circle.r = 0.1f;           
 
-            line.B = new Vector2(0.5f, 0.5f);
-            line.E = new Vector2(0.0f, 0.0f);
-            
+            line.B = new Vector2(0.30f, 0.25f);
+            line.E = new Vector2(0.30f, -0.25f);
+
             light.brightness = 0.8f;
 
-            primitives.Add(circle);
-            primitives.Add(line);
+            //primitives.Add(circle);
+            //primitives.Add(line);
             light_array.Add(light);
             light_array.Add(circle.cl);
         }
@@ -47,7 +47,7 @@ namespace Template
         // Tick: renders one frame
         public void Tick()
         {
-            if (i > -1.0f) i -= 0.02f; else i = 1.0f;
+            if (i > -1.0f) i -= 0.04f; else i = 1.0f;
             light.light_pos = new Vector2(0f, i);
         }
 
@@ -66,8 +66,7 @@ namespace Template
                             distanceToLight = (float)Math.Sqrt(a * a + b * b);
 
                         ray.O = new Vector2(rx, ry);
-                        ray.D = l.light_pos - ray.O;
-                        ray.D = Vector2.Normalize(ray.D);
+                        ray.D = Vector2.Normalize(l.light_pos - ray.O);
                         ray.t = distanceToLight;
 
                         float red_float = 1.0f * l.attentuation(distanceToLight),
@@ -82,7 +81,6 @@ namespace Template
                             if (p.Intersect(ray)) occluded = true;
                         if (!occluded)
                             pixelColor += l.MixColor(red_int, green_int, blue_int);
-
                     }
                     screen.Plot(x, y, MathHelper.Clamp(pixelColor, 0, light.MixColor(255, 255, 255)));
                 }

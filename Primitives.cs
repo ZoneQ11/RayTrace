@@ -34,11 +34,7 @@ namespace Template
         public Vector2 C; //Center
         public float r; //Radius
 
-        float f(float a1, float a2, float b1, float b2, float s)
-        { return b1 + (s - a1) * (b2 - b1) / (a2 - a1); }
-
         public Light cl = new Light(255, 255, 255);
-
         public Circle(float brightness)
         {
             cl.light_pos = new Vector2(0f, 0f);
@@ -64,13 +60,9 @@ namespace Template
             float X_line = E.X - B.X, Y_line = E.Y - B.Y;
             if (ray.D.Y / ray.D.X != Y_line / X_line)
             {
-                float d = (ray.D.X * Y_line) - (ray.D.Y * X_line);
-                if (d != 0)
-                {
-                    float r = (((ray.O.Y - B.Y) * (X_line)) - ((ray.O.X - B.X) * (Y_line))) / d,
-                        s = (((ray.O.Y - B.Y) * ray.D.X) - (ray.O.X - B.X) * ray.D.Y) / d;
-                    if (r >= 0 && s >= 0 && s <= 1) return true;
-                }
+                float s = (ray.D.X * (B.Y - ray.O.Y) + ray.D.Y * (ray.O.X - B.X)) / (X_line * ray.D.Y - Y_line * ray.D.X),
+                    r = (B.X - ray.O.X + X_line * s) / ray.D.X;
+                if (r >= 0 && r < ray.t && s >= 0 && s <= 1) return true;
             } return false;
         }
     }
