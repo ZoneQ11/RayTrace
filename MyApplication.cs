@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using OpenTK;
 
 namespace Template
@@ -20,8 +21,9 @@ namespace Template
         private Light light1 = new Light(1.0f, 1.0f, 1.0f); private Light light2 = new Light(1.0f, 0.0f, 0.0f);
         private Light light3 = new Light(0.0f, 1.0f, 0.0f); private Light light4 = new Light(0.0f, 0.0f, 1.0f);
 
-        private int pixelColor;
+        private int pixelColor, i;
         private int MixColor(int red, int green, int blue) { return (red << 16) + (green << 8) + blue; }
+        private float j = 0.5f;
         private float f(float a1, float a2, float b1, float b2, float s)
         { return b1 + (s - a1) * (b2 - b1) / (a2 - a1); }
 
@@ -40,11 +42,8 @@ namespace Template
             line3.B = new Vector2(-0.25f, 0.15f); line3.E = new Vector2(-0.25f, -0.15f);
             line4.B = new Vector2(0.15f, -0.25f); line4.E = new Vector2(-0.15f, -0.25f);
 
-            light1.light_pos = new Vector2(-1.0f, 1.0f);    light1.brightness = 1.0f;
-            light2.light_pos = new Vector2(1.0f, 1.0f);     light2.brightness = 1.0f;
-            light3.light_pos = new Vector2(1.0f, -1.0f);    light3.brightness = 1.0f;
-            light4.light_pos = new Vector2(-1.0f, -1.0f);   light4.brightness = 1.0f;
-
+            light1.brightness = 0.8f;   light2.brightness = 0.8f;
+            light3.brightness = 0.8f;   light4.brightness = 0.8f;
             primitives.Add(line1);      primitives.Add(line2);
             primitives.Add(line3);      primitives.Add(line4);
 
@@ -57,7 +56,23 @@ namespace Template
 
         // Tick: renders one frame
         public void Tick()
-        { }
+        {
+            if (i < 360) i+=5; else i = 0;
+
+            float rx1 = (float)(-1 * Math.Cos(i * Math.PI / 180) - 1 * Math.Sin(i * Math.PI / 180));
+            float ry1 = (float)(-1 * Math.Sin(i * Math.PI / 180) + 1 * Math.Cos(i * Math.PI / 180));
+            float rx2 = (float)(1 * Math.Cos(i * Math.PI / 180) - 1 * Math.Sin(i * Math.PI / 180));
+            float ry2 = (float)(1 * Math.Sin(i * Math.PI / 180) + 1 * Math.Cos(i * Math.PI / 180));
+            float rx3 = (float)(1 * Math.Cos(i * Math.PI / 180) + 1 * Math.Sin(i * Math.PI / 180));
+            float ry3 = (float)(1 * Math.Sin(i * Math.PI / 180) - 1 * Math.Cos(i * Math.PI / 180));
+            float rx4 = (float)(-1 * Math.Cos(i * Math.PI / 180) + 1 * Math.Sin(i * Math.PI / 180));
+            float ry4 = (float)(-1 * Math.Sin(i * Math.PI / 180) - 1 * Math.Cos(i * Math.PI / 180));
+
+            light1.light_pos = new Vector2(j * rx1, j * ry1);
+            light2.light_pos = new Vector2(j * rx2, j * ry2);
+            light3.light_pos = new Vector2(j * rx3, j * ry3);
+            light4.light_pos = new Vector2(j * rx4, j * ry4);
+        }
 
         public void RenderGL()
         {
@@ -87,7 +102,7 @@ namespace Template
 
                         bool occluded = false;
                         foreach (Primitive p in primitives)
-                            if (p.Intersect(ray)) occluded = true;
+                            if (p.Intersect(ray)) {occluded = true; break; }
                         if (!occluded)
                             pixelColor += MixColor(red_int, green_int, blue_int);
                     }
