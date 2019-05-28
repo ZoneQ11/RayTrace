@@ -13,14 +13,13 @@ namespace Template
     class Light
     {
         public Vector2 light_pos;
-        public int MixColor(int red, int green, int blue) { return (red << 16) + (green << 8) + blue; }
-        public int color;
         public float brightness;
-        public Light(int a, int b, int c)
-        { color = MixColor(a, b, c); }
 
         public float attentuation(float distance)
-        { return brightness / (distance + 1 * distance + 1); }
+        {
+            if (brightness > 1) brightness = 1;
+            return brightness * brightness / (distance + 1 * distance + 1);
+        }
     }
 
     abstract class Primitive
@@ -34,7 +33,7 @@ namespace Template
         public Vector2 C; //Center
         public float r; //Radius
 
-        public Light cl = new Light(255, 255, 255);
+        public Light cl = new Light();
         public Circle(float brightness)
         {
             cl.light_pos = new Vector2(0f, 0f);
@@ -43,11 +42,15 @@ namespace Template
 
         public override bool Intersect(Ray ray)
         {
-            float u = Vector2.Dot(C - ray.O, ray.D);
-            if (ray.t > u)
+            Vector2 i = ray.O - C;
+            float u = Vector2.Dot(i, ray.D),
+                v = u * u + r * r - Vector2.Dot(i, i);
+            if (v >= 0) //Check for intersection
             {
-                Vector2 crosspoint = C - (ray.O + u * ray.D);
-                if (r * r > Vector2.Dot(crosspoint, crosspoint)) return true;
+                v = (float)Math.Sqrt(v);
+                float a = - v - u, b = v - u;
+                if (a >= 0 && b > 0 && a < ray.t) return true; // Ray Outside Circle
+                if (a < 0 && b > 0 && b < ray.t) return true; // Ray Inside Circle                
             } return false;
         }
     }
