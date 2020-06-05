@@ -13,8 +13,8 @@ namespace Template
     {
         public Vector2 light_pos;
         public float brightness, R, G, B;
-        public Light(float R, float G, float B)
-        { this.R = R; this.G = G; this.B = B; }
+        public Light(float brightness, float R, float G, float B)
+        { this.brightness = brightness; this.R = R; this.G = G; this.B = B; }
 
         public float attentuation(float distance)
         {
@@ -34,13 +34,12 @@ namespace Template
         public Vector2 C; //Center
         public float r; //Radius
 
-        public Light cl = new Light(1.0f, 1.0f, 1.0f);
+        public Light cl = new Light(1.0f, 1.0f, 1.0f, 1.0f);
         public Circle(float brightness, float R, float G, float B)
         {
             cl.brightness = brightness;
             cl.R = R; cl.G = G; cl.B = B;
         }
-
         public override bool Intersect(Ray ray)
         {
             Vector2 i = ray.O - C;
@@ -59,6 +58,11 @@ namespace Template
     class Line : Primitive
     {
         public Vector2 B, E; //Begin and End
+        public Line(float B1, float B2, float E1, float E2)
+        {
+            B = new Vector2(B1, B2);
+            E = new Vector2(E1, E2);
+        }
         public override bool Intersect(Ray ray)
         {
             float X_line = E.X - B.X, Y_line = E.Y - B.Y;
